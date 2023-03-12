@@ -143,6 +143,7 @@ Library: lib_burst_generated
 --root-assembly=E:\unity\OmusubiSmith\Temp\StagingArea\Data\Managed\Unity.TextMeshPro.dll
 --root-assembly=E:\unity\OmusubiSmith\Temp\StagingArea\Data\Managed\Unity.Timeline.dll
 --root-assembly=E:\unity\OmusubiSmith\Temp\StagingArea\Data\Managed\Unity.Services.Core.dll
+--root-assembly=E:\unity\OmusubiSmith\Temp\StagingArea\Data\Managed\Assembly-CSharp.dll
 --root-assembly=E:\unity\OmusubiSmith\Temp\StagingArea\Data\Managed\Unity.Services.Core.Environments.dll
 --root-assembly=E:\unity\OmusubiSmith\Temp\StagingArea\Data\Managed\Unity.Services.Core.Internal.dll
 --root-assembly=E:\unity\OmusubiSmith\Temp\StagingArea\Data\Managed\Unity.Services.Core.Analytics.dll
