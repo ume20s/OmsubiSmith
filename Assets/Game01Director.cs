@@ -6,9 +6,6 @@ using System.Threading.Tasks;
 
 public class Game01Director : MonoBehaviour
 {
-    // もろもろの変数
-    float countdown = 3.99f;         // カウントダウン計数
-
     // 画像関連
     public Sprite[] Cd = new Sprite[3];
     public Sprite[] Guest = new Sprite[6];
@@ -27,32 +24,49 @@ public class Game01Director : MonoBehaviour
     GameObject txtOrder;
     GameObject btnMake;
     GameObject fukidashi;
-
+    GameObject[] patatan = new GameObject[8];
+    GameObject[] sozai = new GameObject[2];
 
     // Start is called before the first frame update
     void Start()
     {
         // オブジェクトの取得
         guest = GameObject.Find("guest");
-        txtTime = GameObject.Find("txtTime");
         txtStage = GameObject.Find("txtStage");
+        txtScore = GameObject.Find("txtScore");
+        txtHighScore = GameObject.Find("txtHighScore");
+        txtTime = GameObject.Find("txtTime");
+        txtOmusubiName = GameObject.Find("txtOmusubiName");
         txtOrder = GameObject.Find("txtOrder");
+        btnMake = GameObject.Find("btnMake");
         fukidashi = GameObject.Find("fukidashi");
-
-        // 音声のコンポーネントを取得
-        audioSource = GetComponent<AudioSource>();
+        patatan[0] = GameObject.Find("patatan0");
+        patatan[1] = GameObject.Find("patatan1");
+        patatan[2] = GameObject.Find("patatan2");
+        patatan[3] = GameObject.Find("patatan3");
+        patatan[4] = GameObject.Find("patatan4");
+        patatan[5] = GameObject.Find("patatan5");
+        patatan[6] = GameObject.Find("patatan6");
+        patatan[7] = GameObject.Find("patatan7");
+        sozai[0] = GameObject.Find("sozai1");
+        sozai[1] = GameObject.Find("sozai2");
 
         // あらかじめ余計な表示を消しておく
         txtStage.SetActive(false);
+        txtTime.SetActive(false);
         txtOrder.SetActive(false);
+        btnMake.SetActive(false);
+        txtOmusubiName.SetActive(false);
         fukidashi.SetActive(false);
-
-
+        for(int i = 0; i<8; i++)
+        {
+            patatan[i].SetActive(false);
+        }
+        sozai[0].SetActive(false);
+        sozai[1].SetActive(false);
 
         // カウントダウン
         CountDown();
-
-
     }
 
     // Update is called once per frame
