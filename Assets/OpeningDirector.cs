@@ -7,14 +7,25 @@ public class OpeningDirector : MonoBehaviour
 {
     // BGM関連
     AudioSource audioSource;
-    public AudioClip[] sOpening = new AudioClip[3];
+    public AudioClip[] sOpening = new AudioClip[2];
 
     // Start is called before the first frame update
     void Start()
     {
         // 音声のコンポーネントを取得
         audioSource = GetComponent<AudioSource>();
-        audioSource.clip = sOpening[0];
+
+        // ランダムでBGMを選択
+        int song = Random.Range(0, 5);
+        switch (song)
+        {
+            case 0:
+                audioSource.clip = sOpening[1];
+                break;
+            default:
+                audioSource.clip = sOpening[0];
+                break;
+        }
         audioSource.Play();
     }
 

@@ -323,9 +323,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sOpening:
+  - {fileID: 8300000, guid: 852b5d67b3a5de3459f795eead0db666, type: 3}
   - {fileID: 8300000, guid: ef8e3d44e317ed84b97869bda8b51def, type: 3}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!4 &1490952898
 Transform:
   m_ObjectHideFlags: 0

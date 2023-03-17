@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 public class Game01Director : MonoBehaviour
 {
+    // 変数もろもろ
+    private int gamePhase = 0;          // ゲーム状態遷移
+
     // 画像関連
     public Sprite[] Cd = new Sprite[3];
     public Sprite[] Guest = new Sprite[6];
@@ -24,6 +27,7 @@ public class Game01Director : MonoBehaviour
     GameObject txtOrder;
     GameObject btnMake;
     GameObject fukidashi;
+    GameObject cover;
     GameObject[] patatan = new GameObject[8];
     GameObject[] sozai = new GameObject[2];
 
@@ -40,6 +44,7 @@ public class Game01Director : MonoBehaviour
         txtOrder = GameObject.Find("txtOrder");
         btnMake = GameObject.Find("btnMake");
         fukidashi = GameObject.Find("fukidashi");
+        cover = GameObject.Find("so00_cover");
         patatan[0] = GameObject.Find("patatan0");
         patatan[1] = GameObject.Find("patatan1");
         patatan[2] = GameObject.Find("patatan2");
@@ -50,6 +55,9 @@ public class Game01Director : MonoBehaviour
         patatan[7] = GameObject.Find("patatan7");
         sozai[0] = GameObject.Find("sozai1");
         sozai[1] = GameObject.Find("sozai2");
+
+        // 音声のコンポーネントを取得
+        audioSource = GetComponent<AudioSource>();
 
         // あらかじめ余計な表示を消しておく
         txtStage.SetActive(false);
@@ -65,22 +73,39 @@ public class Game01Director : MonoBehaviour
         sozai[0].SetActive(false);
         sozai[1].SetActive(false);
 
-        // カウントダウン
+        // カウントダウンとゲーム準備
         CountDown();
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        switch(gamePhase)
+        {
+            // ゲーム開始のもろもろの設定
+            case 1:
+                // ゲーム素材の再表示
+                txtStage.SetActive(true);
+                txtTime.SetActive(true);
+                txtOrder.SetActive(true);
+                btnMake.SetActive(true);
+                txtOmusubiName.SetActive(true);
+                fukidashi.SetActive(true);
+                cover.SetActive(false);
 
+                // お客様のセットと注文の設定
+                guest.GetComponent<SpriteRenderer>().sprite = Guest[0];
+
+                break;
+
+
+        }
     }
 
     private async void CountDown()
     {
-        // 音声のコンポーネントを取得
-        audioSource = GetComponent<AudioSource>();
-        guest = GameObject.Find("guest");
-
+        // カウントダウン！
         guest.GetComponent<SpriteRenderer>().sprite = Cd[2];
         audioSource.PlayOneShot(vCd[2]);
         await Task.Delay(1000);
@@ -90,6 +115,8 @@ public class Game01Director : MonoBehaviour
         guest.GetComponent<SpriteRenderer>().sprite = Cd[0];
         audioSource.PlayOneShot(vCd[0]);
         await Task.Delay(1000);
-    }
 
+        // ゲーム状態を進める
+        gamePhase++;
+    }
 }
