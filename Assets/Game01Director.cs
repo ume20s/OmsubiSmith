@@ -11,7 +11,7 @@ public class Game01Director : MonoBehaviour
     private int Stage = 0;                  // ステージ
     private int GuestNum = 0;               // お客様番号
     private int OrderNum;                   // 注文おむすび番号
-    private int Phase = 0;                  // ゲーム状態遷移
+    static public int Phase = 0;                   // ゲーム状態遷移
 
     // 画像関連
     public Sprite[] Cd = new Sprite[3];
@@ -151,11 +151,5 @@ public class Game01Director : MonoBehaviour
         // ボタンと素材パネルを表示
         btnMake.SetActive(true);
         cover.SetActive(false);
-    }
-
-    // もう１回注文を聞く
-    public void ReOrder()
-    {
-        Phase = 1;
     }
 }
