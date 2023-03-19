@@ -111,7 +111,6 @@ public class Game01Director : MonoBehaviour
                 Phase++;
                 break;
 
-
         }
     }
 
