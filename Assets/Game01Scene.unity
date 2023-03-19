@@ -1168,6 +1168,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 48a378808d4d4574f9b7b6732951a852, type: 3}
   - {fileID: 8300000, guid: 0ae8fb8310492724d9aa7e4aa09db2bd, type: 3}
   - {fileID: 8300000, guid: 390828180913bea489518a98f84d26ea, type: 3}
+  OrderText: {fileID: 1182310733}
 --- !u!4 &198983944
 Transform:
   m_ObjectHideFlags: 0
@@ -2619,7 +2620,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u30DC\u30AF\u306B<u><color=#cc0000>\u30B7\u30E3\u30B1\u30D0\u30BF\u30FC</color></u>\u3092\u4F5C\u3063\u3066\u304F\u308C\u306A\u3044\u304B"
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 56c3e530489dc2c4b88fb6fd78dfda9e, type: 2}
   m_sharedMaterial: {fileID: 7947102331964504882, guid: 56c3e530489dc2c4b88fb6fd78dfda9e, type: 2}

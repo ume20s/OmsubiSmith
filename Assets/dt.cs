@@ -5,7 +5,7 @@ using UnityEngine;
 public class dt : MonoBehaviour
 {
     // ‚¨‚Ş‚·‚Ñ–¼”z—ñ
-    public static readonly string[] Omusubi =
+    public static readonly string[] Omsubi =
     {
         "",
         "è‚Ù‚®‚µgƒWƒƒƒP",

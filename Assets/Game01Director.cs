@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Threading;
 using System.Threading.Tasks;
+using TMPro;        // TextMeshPro用に必要
 
 public class Game01Director : MonoBehaviour
 {
     // 変数もろもろ
-    private int gamePhase = 0;          // ゲーム状態遷移
+    private int Stage = 0;                  // ステージ
+    private int GuestNum = 0;               // お客様番号
+    private int OrderNum;                   // 注文おむすび番号
+    private int Phase = 0;                  // ゲーム状態遷移
 
     // 画像関連
     public Sprite[] Cd = new Sprite[3];
@@ -30,6 +34,9 @@ public class Game01Director : MonoBehaviour
     GameObject cover;
     GameObject[] patatan = new GameObject[8];
     GameObject[] sozai = new GameObject[2];
+
+    // TextMeshPro用注文オブジェクト
+    [SerializeField] TextMeshProUGUI OrderText;
 
     // Start is called before the first frame update
     void Start()
@@ -81,7 +88,7 @@ public class Game01Director : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        switch(gamePhase)
+        switch(Phase)
         {
             // ゲーム開始のもろもろの設定
             case 1:
@@ -89,23 +96,28 @@ public class Game01Director : MonoBehaviour
                 txtStage.SetActive(true);
                 txtTime.SetActive(true);
                 txtOrder.SetActive(true);
-                btnMake.SetActive(true);
                 txtOmusubiName.SetActive(true);
                 fukidashi.SetActive(true);
-                cover.SetActive(false);
 
                 // お客様のセットと注文の設定
-                guest.GetComponent<SpriteRenderer>().sprite = Guest[0];
+                guest.GetComponent<SpriteRenderer>().sprite = Guest[GuestNum];
+                OrderNum = Random.Range(1, 34);
+                Phase++;
+                break;
 
+            case 2:
+                // 注文の表示
+                DispOrder();
+                Phase++;
                 break;
 
 
         }
     }
 
+    // カウントダウン！
     private async void CountDown()
     {
-        // カウントダウン！
         guest.GetComponent<SpriteRenderer>().sprite = Cd[2];
         audioSource.PlayOneShot(vCd[2]);
         await Task.Delay(1000);
@@ -117,6 +129,31 @@ public class Game01Director : MonoBehaviour
         await Task.Delay(1000);
 
         // ゲーム状態を進める
-        gamePhase++;
+        Phase++;
+    }
+
+    // 注文の表示
+    private async void DispOrder()
+    {
+        // ボタンと素材パネルを隠す
+        btnMake.SetActive(false);
+        cover.SetActive(true);
+
+        // 一定時間だけ注文セリフの表示
+        OrderText.text = dt.guestTalk[Stage, GuestNum, 0] +
+            "<u><color=#cc0000>" + dt.Omsubi[OrderNum] + "</color></u>" +
+            dt.guestTalk[Stage, GuestNum, 1];
+        await Task.Delay(1500);
+        OrderText.text = "もう１回注文を聞く";
+
+        // ボタンと素材パネルを表示
+        btnMake.SetActive(true);
+        cover.SetActive(false);
+    }
+
+    // もう１回注文を聞く
+    public void ReOrder()
+    {
+        Phase = 1;
     }
 }
