@@ -92,6 +92,9 @@ public class Game01Director : MonoBehaviour
         {
             // ゲーム開始のもろもろの設定
             case 1:
+                // BGM開始
+                audioSource.Play();
+
                 // ゲーム素材の再表示
                 txtStage.SetActive(true);
                 txtTime.SetActive(true);
