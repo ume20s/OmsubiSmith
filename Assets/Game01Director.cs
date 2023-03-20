@@ -11,7 +11,7 @@ public class Game01Director : MonoBehaviour
     private int Stage = 0;                  // ステージ
     private int GuestNum = 0;               // お客様番号
     private int OrderNum;                   // 注文おむすび番号
-    static public int Phase = 0;                   // ゲーム状態遷移
+    static public int Phase = 0;            // ゲーム状態遷移
 
     // 画像関連
     public Sprite[] Cd = new Sprite[3];
@@ -31,6 +31,7 @@ public class Game01Director : MonoBehaviour
     GameObject txtOrder;
     GameObject btnMake;
     GameObject fukidashi;
+    GameObject reorder;
     GameObject cover;
     GameObject[] patatan = new GameObject[8];
     GameObject[] sozai = new GameObject[2];
@@ -51,6 +52,7 @@ public class Game01Director : MonoBehaviour
         txtOrder = GameObject.Find("txtOrder");
         btnMake = GameObject.Find("btnMake");
         fukidashi = GameObject.Find("fukidashi");
+        reorder = GameObject.Find("reorder");
         cover = GameObject.Find("so00_cover");
         patatan[0] = GameObject.Find("patatan0");
         patatan[1] = GameObject.Find("patatan1");
@@ -73,12 +75,11 @@ public class Game01Director : MonoBehaviour
         btnMake.SetActive(false);
         txtOmusubiName.SetActive(false);
         fukidashi.SetActive(false);
-        for(int i = 0; i<8; i++)
+        reorder.SetActive(false);
+        for (int i = 0; i<8; i++)
         {
             patatan[i].SetActive(false);
         }
-        sozai[0].SetActive(false);
-        sozai[1].SetActive(false);
 
         // カウントダウンとゲーム準備
         CountDown();
@@ -100,7 +101,6 @@ public class Game01Director : MonoBehaviour
                 txtTime.SetActive(true);
                 txtOrder.SetActive(true);
                 txtOmusubiName.SetActive(true);
-                fukidashi.SetActive(true);
 
                 // お客様のセットと注文の設定
                 guest.GetComponent<SpriteRenderer>().sprite = Guest[GuestNum];
@@ -113,7 +113,6 @@ public class Game01Director : MonoBehaviour
                 DispOrder();
                 Phase++;
                 break;
-
         }
     }
 
@@ -142,11 +141,14 @@ public class Game01Director : MonoBehaviour
         cover.SetActive(true);
 
         // 一定時間だけ注文セリフの表示
+        fukidashi.SetActive(true);
+        reorder.SetActive(false);
         OrderText.text = dt.guestTalk[Stage, GuestNum, 0] +
             "<u><color=#cc0000>" + dt.Omsubi[OrderNum] + "</color></u>" +
             dt.guestTalk[Stage, GuestNum, 1];
         await Task.Delay(1500);
-        OrderText.text = "もう１回注文を聞く";
+        fukidashi.SetActive(false);
+        reorder.SetActive(true);
 
         // ボタンと素材パネルを表示
         btnMake.SetActive(true);
