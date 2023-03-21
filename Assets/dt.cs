@@ -121,4 +121,7 @@ public class dt : MonoBehaviour
             {"ああああ","ああああ"},
             {"ドロォオ・・・","・・・"}}
     };
+
+    // 素材置き場に置かれている素材
+    static public int[] nowSozai = new int[2] { 0, 0 };
 }

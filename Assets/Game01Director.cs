@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using System.Threading;
 using System.Threading.Tasks;
 using TMPro;        // TextMeshPro用に必要
@@ -11,11 +13,14 @@ public class Game01Director : MonoBehaviour
     private int Stage = 0;                  // ステージ
     private int GuestNum = 0;               // お客様番号
     private int OrderNum;                   // 注文おむすび番号
-    static public int Phase = 0;            // ゲーム状態遷移
+
+    // ゲーム状態遷移（外からも操作）
+    static public int Phase = 0;
 
     // 画像関連
     public Sprite[] Cd = new Sprite[3];
     public Sprite[] Guest = new Sprite[6];
+    public Sprite[] Sozai = new Sprite[21];
 
     // 音声関連
     AudioSource audioSource;
@@ -33,8 +38,10 @@ public class Game01Director : MonoBehaviour
     GameObject fukidashi;
     GameObject reorder;
     GameObject cover;
+    GameObject maru;
+    GameObject peke;
     GameObject[] patatan = new GameObject[8];
-    GameObject[] sozai = new GameObject[2];
+    GameObject[] makesozai = new GameObject[2];
 
     // TextMeshPro用注文オブジェクト
     [SerializeField] TextMeshProUGUI OrderText;
@@ -54,6 +61,8 @@ public class Game01Director : MonoBehaviour
         fukidashi = GameObject.Find("fukidashi");
         reorder = GameObject.Find("reorder");
         cover = GameObject.Find("so00_cover");
+        maru = GameObject.Find("maru");
+        peke = GameObject.Find("peke");
         patatan[0] = GameObject.Find("patatan0");
         patatan[1] = GameObject.Find("patatan1");
         patatan[2] = GameObject.Find("patatan2");
@@ -62,8 +71,8 @@ public class Game01Director : MonoBehaviour
         patatan[5] = GameObject.Find("patatan5");
         patatan[6] = GameObject.Find("patatan6");
         patatan[7] = GameObject.Find("patatan7");
-        sozai[0] = GameObject.Find("sozai1");
-        sozai[1] = GameObject.Find("sozai2");
+        makesozai[0] = GameObject.Find("sozai1");
+        makesozai[1] = GameObject.Find("sozai2");
 
         // 音声のコンポーネントを取得
         audioSource = GetComponent<AudioSource>();
@@ -72,8 +81,10 @@ public class Game01Director : MonoBehaviour
         txtStage.SetActive(false);
         txtTime.SetActive(false);
         txtOrder.SetActive(false);
-        btnMake.SetActive(false);
         txtOmusubiName.SetActive(false);
+        btnMake.SetActive(false);
+        maru.SetActive(false);
+        peke.SetActive(false);
         fukidashi.SetActive(false);
         reorder.SetActive(false);
         for (int i = 0; i<8; i++)
@@ -113,6 +124,13 @@ public class Game01Director : MonoBehaviour
                 DispOrder();
                 Phase++;
                 break;
+
+            case 3:
+                makesozai[0].GetComponent<SpriteRenderer>().sprite = Sozai[dt.nowSozai[0]];
+                makesozai[1].GetComponent<SpriteRenderer>().sprite = Sozai[dt.nowSozai[1]];
+                txtOmusubiName.GetComponent<Text>().text = dt.Omsubi[dt.makeOmsubi[dt.nowSozai[0], dt.nowSozai[1]]];
+                break;
+
         }
     }
 
