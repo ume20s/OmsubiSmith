@@ -14,9 +14,6 @@ public class Game01Director : MonoBehaviour
     private int GuestNum = 0;               // お客様番号
     private int OrderNum;                   // 注文おむすび番号
 
-    // ゲーム状態遷移（外からも操作）
-    static public int Phase = 0;
-
     // 画像関連
     public Sprite[] Cd = new Sprite[3];
     public Sprite[] Guest = new Sprite[6];
@@ -25,6 +22,9 @@ public class Game01Director : MonoBehaviour
     // 音声関連
     AudioSource audioSource;
     public AudioClip[] vCd = new AudioClip[3];
+    public AudioClip sePinpon;
+    public AudioClip seBubuu;
+    public AudioClip seStageClear;
 
     // ゲームオブジェクト
     GameObject guest;
@@ -40,6 +40,7 @@ public class Game01Director : MonoBehaviour
     GameObject cover;
     GameObject maru;
     GameObject peke;
+    GameObject stageclear;
     GameObject[] patatan = new GameObject[8];
     GameObject[] makesozai = new GameObject[2];
 
@@ -57,12 +58,13 @@ public class Game01Director : MonoBehaviour
         txtTime = GameObject.Find("txtTime");
         txtOmusubiName = GameObject.Find("txtOmusubiName");
         txtOrder = GameObject.Find("txtOrder");
-        btnMake = GameObject.Find("btnMake");
         fukidashi = GameObject.Find("fukidashi");
         reorder = GameObject.Find("reorder");
         cover = GameObject.Find("so00_cover");
+        btnMake = GameObject.Find("btnMake");
         maru = GameObject.Find("maru");
         peke = GameObject.Find("peke");
+        stageclear = GameObject.Find("stageclear");
         patatan[0] = GameObject.Find("patatan0");
         patatan[1] = GameObject.Find("patatan1");
         patatan[2] = GameObject.Find("patatan2");
@@ -85,6 +87,7 @@ public class Game01Director : MonoBehaviour
         btnMake.SetActive(false);
         maru.SetActive(false);
         peke.SetActive(false);
+        stageclear.SetActive(false);
         fukidashi.SetActive(false);
         reorder.SetActive(false);
         for (int i = 0; i<8; i++)
@@ -92,45 +95,88 @@ public class Game01Director : MonoBehaviour
             patatan[i].SetActive(false);
         }
 
+        // フェーズ０から開始
+        dt.Phase = 0;
+
         // カウントダウンとゲーム準備
         CountDown();
-
     }
 
     // Update is called once per frame
     void Update()
     {
-        switch(Phase)
+        switch(dt.Phase)
         {
             // ゲーム開始のもろもろの設定
             case 1:
-                // BGM開始
-                audioSource.Play();
-
                 // ゲーム素材の再表示
                 txtStage.SetActive(true);
                 txtTime.SetActive(true);
                 txtOrder.SetActive(true);
-                txtOmusubiName.SetActive(true);
 
                 // お客様のセットと注文の設定
                 guest.GetComponent<SpriteRenderer>().sprite = Guest[GuestNum];
                 OrderNum = Random.Range(1, 34);
-                Phase++;
+                dt.Phase++;
                 break;
 
+            // 注文を表示
             case 2:
-                // 注文の表示
                 DispOrder();
-                Phase++;
+                dt.Phase++;
                 break;
 
+            // 素材セレクトループ
             case 3:
                 makesozai[0].GetComponent<SpriteRenderer>().sprite = Sozai[dt.nowSozai[0]];
                 makesozai[1].GetComponent<SpriteRenderer>().sprite = Sozai[dt.nowSozai[1]];
                 txtOmusubiName.GetComponent<Text>().text = dt.Omsubi[dt.makeOmsubi[dt.nowSozai[0], dt.nowSozai[1]]];
                 break;
 
+            // おむすび判定
+            case 4:
+                if(dt.makeOmsubi[dt.nowSozai[0], dt.nowSozai[1]] == OrderNum)
+                {
+                    correctOmsubi();
+                }
+                else
+                {
+                    incorrectOmsubi();
+                }
+                break;
+
+            // 判定待ち
+            case 5:
+                break;
+
+            // 次のステージへ
+            case 6:
+                // BGM止めてステージクリア効果音
+                audioSource.Stop();
+                audioSource.PlayOneShot(seStageClear);
+
+                // 余計な素材を非表示
+                cover.SetActive(true);
+                reorder.SetActive(false);
+                fukidashi.SetActive(false);
+                txtOmusubiName.SetActive(false);
+                txtOrder.SetActive(false);
+                makesozai[0].GetComponent<SpriteRenderer>().sprite = Sozai[0];
+                makesozai[1].GetComponent<SpriteRenderer>().sprite = Sozai[0];
+
+                // ステージクリア表示
+                stageclear.SetActive(true);
+                dt.Phase++;
+                break;
+
+            case 7:
+                // タップしたら
+                if (Input.GetMouseButtonDown(0))
+                {
+                    // 次のステージへ
+                    SceneManager.LoadScene("GameClearScene");
+                }
+                break;
         }
     }
 
@@ -147,15 +193,19 @@ public class Game01Director : MonoBehaviour
         audioSource.PlayOneShot(vCd[0]);
         await Task.Delay(1000);
 
+        // BGM開始
+        audioSource.Play();
+
         // ゲーム状態を進める
-        Phase++;
+        dt.Phase++;
     }
 
     // 注文の表示
     private async void DispOrder()
     {
-        // ボタンと素材パネルを隠す
+        // ボタンとおむすび名と素材パネルを隠す
         btnMake.SetActive(false);
+        txtOmusubiName.SetActive(false);
         cover.SetActive(true);
 
         // 一定時間だけ注文セリフの表示
@@ -168,8 +218,45 @@ public class Game01Director : MonoBehaviour
         fukidashi.SetActive(false);
         reorder.SetActive(true);
 
-        // ボタンと素材パネルを表示
+        // ボタンとおむすび名と素材パネルを表示
         btnMake.SetActive(true);
+        txtOmusubiName.SetActive(true);
         cover.SetActive(false);
+    }
+
+    // おむすび正解
+    private async void correctOmsubi()
+    {
+        dt.Phase = 5;
+        audioSource.PlayOneShot(sePinpon);
+        patatan[0].SetActive(true);
+        maru.SetActive(true);
+        await Task.Delay(500);
+        dt.nowSozai[0] = 0;
+        dt.nowSozai[1] = 0;
+        patatan[0].SetActive(false);
+        maru.SetActive(false);
+        GuestNum++;
+        if(GuestNum < 6)
+        {
+            dt.Phase = 1;
+        }
+        else
+        {
+            dt.Phase = 6;
+        }
+    }
+
+    // おむすび間違い
+    private async void incorrectOmsubi()
+    {
+        dt.Phase = 5;
+        audioSource.PlayOneShot(seBubuu);
+        peke.SetActive(true);
+        await Task.Delay(1500);
+        dt.nowSozai[0] = 0;
+        dt.nowSozai[1] = 0;
+        peke.SetActive(false);
+        dt.Phase = 3;
     }
 }

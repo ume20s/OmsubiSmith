@@ -7,6 +7,6 @@ public class fukidasiCtrl : MonoBehaviour
     // タップしたら注文を再表示
     public void onClickFikidashi()
     {
-        Game01Director.Phase = 2;
+        dt.Phase = 2;
     }
 }
