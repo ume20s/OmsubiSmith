@@ -161,6 +161,8 @@ public class Game01Director : MonoBehaviour
                 fukidashi.SetActive(false);
                 txtOmusubiName.SetActive(false);
                 txtOrder.SetActive(false);
+                btnMake.SetActive(false);
+                guest.SetActive(false);
                 makesozai[0].GetComponent<SpriteRenderer>().sprite = Sozai[0];
                 makesozai[1].GetComponent<SpriteRenderer>().sprite = Sozai[0];
 

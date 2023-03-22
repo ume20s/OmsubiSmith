@@ -12,6 +12,11 @@ public class OpeningDirector : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // 大域変数の初期化
+        dt.nowSozai[0] = 0;
+        dt.nowSozai[1] = 0;
+        dt.Phase = 0;
+
         // 音声のコンポーネントを取得
         audioSource = GetComponent<AudioSource>();
 
