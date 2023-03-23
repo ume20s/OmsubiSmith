@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameClearDirector : MonoBehaviour
+
+public class GameOverDirector : MonoBehaviour
 {
     // 音声関連
     AudioSource audioSource;
-    public AudioClip vGameClear;
+    public AudioClip vGameOver;
 
     // Start is called before the first frame update
     void Start()
     {
         // 音声のコンポーネントを取得
         audioSource = GetComponent<AudioSource>();
-        audioSource.clip = vGameClear;
+        audioSource.clip = vGameOver;
         audioSource.Play();
     }
 

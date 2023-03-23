@@ -1473,6 +1473,7 @@ MonoBehaviour:
   sePinpon: {fileID: 8300000, guid: d15eb0432379bc74eb52bad82a31a645, type: 3}
   seBubuu: {fileID: 8300000, guid: 922f423a7cfd3e84783ea97d1a908ae6, type: 3}
   seStageClear: {fileID: 8300000, guid: 2b0b9832b7d60404aaa69342bfb3c880, type: 3}
+  seTimeout: {fileID: 8300000, guid: 29e71c7f3e3e72d478acb4ced11a5b8d, type: 3}
   OrderText: {fileID: 1182310733}
 --- !u!4 &198983944
 Transform:

@@ -13,6 +13,9 @@ public class Game01Director : MonoBehaviour
     private int Stage = 0;                  // ステージ
     private int GuestNum = 0;               // お客様番号
     private int OrderNum;                   // 注文おむすび番号
+    // private float remainTime = 60.999f;     // 残り時間
+    private float remainTime = 6.999f;     // 残り時間
+    private bool inGame = false;            // ゲーム中（カウントダウンする）
 
     // 画像関連
     public Sprite[] Cd = new Sprite[3];
@@ -25,6 +28,7 @@ public class Game01Director : MonoBehaviour
     public AudioClip sePinpon;
     public AudioClip seBubuu;
     public AudioClip seStageClear;
+    public AudioClip seTimeout;
 
     // ゲームオブジェクト
     GameObject guest;
@@ -105,6 +109,18 @@ public class Game01Director : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // ゲーム中ならカウントダウン
+        if(inGame)
+        {
+            remainTime -= Time.deltaTime;
+            txtTime.GetComponent<Text>().text = ((int)remainTime).ToString();
+            if((int)remainTime <= 0)
+            {
+                inGame = false;
+                dt.Phase = 8;
+            }
+        }
+
         switch(dt.Phase)
         {
             // ゲーム開始のもろもろの設定
@@ -118,6 +134,9 @@ public class Game01Director : MonoBehaviour
                 guest.GetComponent<SpriteRenderer>().sprite = Guest[GuestNum];
                 OrderNum = Random.Range(1, 34);
                 dt.Phase++;
+
+                // ゲーム開始！
+                inGame = true;
                 break;
 
             // 注文を表示
@@ -149,7 +168,7 @@ public class Game01Director : MonoBehaviour
             case 5:
                 break;
 
-            // 次のステージへ
+            // ステージクリア
             case 6:
                 // BGM止めてステージクリア効果音
                 audioSource.Stop();
@@ -168,9 +187,10 @@ public class Game01Director : MonoBehaviour
 
                 // ステージクリア表示
                 stageclear.SetActive(true);
-                dt.Phase++;
+                dt.Phase = 7;
                 break;
 
+            // 次ステージ待ち
             case 7:
                 // タップしたら
                 if (Input.GetMouseButtonDown(0))
@@ -178,6 +198,11 @@ public class Game01Director : MonoBehaviour
                     // 次のステージへ
                     SceneManager.LoadScene("GameClearScene");
                 }
+                break;
+
+            // ゲームオーバー
+            case 8:
+                gameOverEfect();
                 break;
         }
     }
@@ -260,5 +285,20 @@ public class Game01Director : MonoBehaviour
         dt.nowSozai[1] = 0;
         peke.SetActive(false);
         dt.Phase = 3;
+    }
+
+    // ゲームオーバーエフェクト
+    private async void gameOverEfect()
+    {
+        // 二度と帰ってこないようにゲームフェーズを99にする
+        dt.Phase = 99;
+
+        // BGM止めてタイムアウト効果音
+        audioSource.Stop();
+        audioSource.PlayOneShot(seTimeout);
+        await Task.Delay(2700);
+
+        // ゲームオーバー画面へ
+        SceneManager.LoadScene("GameOverScene");
     }
 }
