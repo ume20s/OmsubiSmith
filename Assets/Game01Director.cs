@@ -62,7 +62,7 @@ public class Game01Director : MonoBehaviour
         guest = GameObject.Find("guest");
         txtStage = GameObject.Find("txtStage");
         txtScore = GameObject.Find("txtScore");
-        txtHighScore = GameObject.Find("txtHighScore");
+        txtHighScore = GameObject.Find("txtHighscore");
         txtTime = GameObject.Find("txtTime");
         txtOmusubiName = GameObject.Find("txtOmusubiName");
         txtOrder = GameObject.Find("txtOrder");
@@ -106,6 +106,9 @@ public class Game01Director : MonoBehaviour
         // スコアを０に
         dt.Score = 0;
         txtScore.GetComponent<Text>().text = "Score:" + dt.Score.ToString("D4");
+
+        // ハイスコア表示
+        txtHighScore.GetComponent<Text>().text = "HighScore:" + dt.HighScore.ToString("D4");
 
         // フェーズ０から開始
         dt.Phase = 0;
@@ -292,6 +295,7 @@ public class Game01Director : MonoBehaviour
             // ポイント加算
             dt.Score += Point;
             txtScore.GetComponent<Text>().text = "Score:" + dt.Score.ToString("D4");
+            checkHighScore();
 
             // ピンポン○
             audioSource.PlayOneShot(sePinpon);
@@ -378,12 +382,28 @@ public class Game01Director : MonoBehaviour
             }
             dt.Score += div;
             Bonus -= div;
+            checkHighScore();
             txtScore.GetComponent<Text>().text = "Score:" + dt.Score.ToString("D4");
             txtTime.GetComponent<Text>().text = Bonus.ToString();
             audioSource.PlayOneShot(sePi);
             await Task.Delay(70);
         }
+    }
 
+    // ハイスコアチェック
+    private void checkHighScore()
+    {
+        // 現スコアがハイスコアを上回ったら
+        if(dt.Score > dt.HighScore)
+        {
+            // ハイスコア更新
+            dt.HighScore = dt.Score;
+            txtHighScore.GetComponent<Text>().text = "HighScore:" + dt.HighScore.ToString("D4");
+
+            // ハイスコア保存
+            PlayerPrefs.SetInt(dt.SAVE_KEY, dt.HighScore);
+            PlayerPrefs.Save();
+        }
     }
 
     // ゲームオーバーエフェクト

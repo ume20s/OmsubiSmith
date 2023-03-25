@@ -13,6 +13,7 @@ public class dt : MonoBehaviour
     // スコア関連
     static public int Score = 0;
     static public int HighScore = 0;
+    static public string SAVE_KEY = "HighScore";    // ハイスコア保存キー
 
     // おむすび名配列
     public static readonly string[] Omsubi =
