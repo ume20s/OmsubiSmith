@@ -1473,6 +1473,7 @@ MonoBehaviour:
   sePinpon: {fileID: 8300000, guid: d15eb0432379bc74eb52bad82a31a645, type: 3}
   seBubuu: {fileID: 8300000, guid: 922f423a7cfd3e84783ea97d1a908ae6, type: 3}
   seStageClear: {fileID: 8300000, guid: 2b0b9832b7d60404aaa69342bfb3c880, type: 3}
+  sePi: {fileID: 8300000, guid: f44baf54b8067f84e907f937fabb14ec, type: 3}
   seTimeout: {fileID: 8300000, guid: 29e71c7f3e3e72d478acb4ced11a5b8d, type: 3}
   OrderText: {fileID: 1182310733}
 --- !u!4 &198983944
@@ -1644,7 +1645,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: a82816470ab97f441bd665a1f04977b4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 05a6ddae2cb228847841804466ce0eef, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1825,7 +1826,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 60
+  m_Text: 0
 --- !u!222 &479991285
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3486,7 +3487,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Score:0000
+  m_Text: Score:4D
 --- !u!222 &925082926
 CanvasRenderer:
   m_ObjectHideFlags: 0

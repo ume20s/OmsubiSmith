@@ -16,6 +16,8 @@ public class OpeningDirector : MonoBehaviour
         dt.nowSozai[0] = 0;
         dt.nowSozai[1] = 0;
         dt.Phase = 0;
+        dt.Score = 0;
+        dt.HighScore = 0;
 
         // 音声のコンポーネントを取得
         audioSource = GetComponent<AudioSource>();

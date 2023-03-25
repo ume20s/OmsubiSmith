@@ -13,9 +13,12 @@ public class Game01Director : MonoBehaviour
     private int Stage = 0;                  // ステージ
     private int GuestNum = 0;               // お客様番号
     private int OrderNum;                   // 注文おむすび番号
-    // private float remainTime = 60.999f;     // 残り時間
-    private float remainTime = 6.999f;     // 残り時間
-    private bool inGame = false;            // ゲーム中（カウントダウンする）
+    private float remainTime = 60.999f;     // 残り時間
+    private bool isCountDown = false;       // カウントダウン中
+    private bool isTappable = false;        // タップ可能
+
+    // おむすびポイント
+    const int Point = 10;
 
     // 画像関連
     public Sprite[] Cd = new Sprite[3];
@@ -28,6 +31,7 @@ public class Game01Director : MonoBehaviour
     public AudioClip sePinpon;
     public AudioClip seBubuu;
     public AudioClip seStageClear;
+    public AudioClip sePi;
     public AudioClip seTimeout;
 
     // ゲームオブジェクト
@@ -99,6 +103,10 @@ public class Game01Director : MonoBehaviour
             patatan[i].SetActive(false);
         }
 
+        // スコアを０に
+        dt.Score = 0;
+        txtScore.GetComponent<Text>().text = "Score:" + dt.Score.ToString("D4");
+
         // フェーズ０から開始
         dt.Phase = 0;
 
@@ -110,13 +118,13 @@ public class Game01Director : MonoBehaviour
     void Update()
     {
         // ゲーム中ならカウントダウン
-        if(inGame)
+        if(isCountDown)
         {
             remainTime -= Time.deltaTime;
             txtTime.GetComponent<Text>().text = ((int)remainTime).ToString();
             if((int)remainTime <= 0)
             {
-                inGame = false;
+                isCountDown = false;
                 dt.Phase = 8;
             }
         }
@@ -136,7 +144,8 @@ public class Game01Director : MonoBehaviour
                 dt.Phase++;
 
                 // ゲーム開始！
-                inGame = true;
+                isCountDown = true;
+                isTappable = true;
                 break;
 
             // 注文を表示
@@ -170,6 +179,9 @@ public class Game01Director : MonoBehaviour
 
             // ステージクリア
             case 6:
+                // カウントダウンを止める
+                isCountDown = false;
+
                 // BGM止めてステージクリア効果音
                 audioSource.Stop();
                 audioSource.PlayOneShot(seStageClear);
@@ -187,6 +199,10 @@ public class Game01Director : MonoBehaviour
 
                 // ステージクリア表示
                 stageclear.SetActive(true);
+
+                // 残り時間ボーナスを加算
+                addBonus();
+
                 dt.Phase = 7;
                 break;
 
@@ -230,61 +246,144 @@ public class Game01Director : MonoBehaviour
     // 注文の表示
     private async void DispOrder()
     {
-        // ボタンとおむすび名と素材パネルを隠す
-        btnMake.SetActive(false);
-        txtOmusubiName.SetActive(false);
-        cover.SetActive(true);
+        // タップ可能だったら処理開始
+        if(isTappable)
+        {
+            // タップを一時抑制
+            isTappable = false;
 
-        // 一定時間だけ注文セリフの表示
-        fukidashi.SetActive(true);
-        reorder.SetActive(false);
-        OrderText.text = dt.guestTalk[Stage, GuestNum, 0] +
-            "<u><color=#cc0000>" + dt.Omsubi[OrderNum] + "</color></u>" +
-            dt.guestTalk[Stage, GuestNum, 1];
-        await Task.Delay(1500);
-        fukidashi.SetActive(false);
-        reorder.SetActive(true);
+            // ボタンとおむすび名と素材パネルを隠す
+            btnMake.SetActive(false);
+            txtOmusubiName.SetActive(false);
+            cover.SetActive(true);
 
-        // ボタンとおむすび名と素材パネルを表示
-        btnMake.SetActive(true);
-        txtOmusubiName.SetActive(true);
-        cover.SetActive(false);
+            // 一定時間だけ注文セリフの表示
+            fukidashi.SetActive(true);
+            reorder.SetActive(false);
+            OrderText.text = dt.guestTalk[Stage, GuestNum, 0] +
+                "<u><color=#cc0000>" + dt.Omsubi[OrderNum] + "</color></u>" +
+                dt.guestTalk[Stage, GuestNum, 1];
+            await Task.Delay(1500);
+            fukidashi.SetActive(false);
+            reorder.SetActive(true);
+
+            // ボタンとおむすび名と素材パネルを表示
+            btnMake.SetActive(true);
+            txtOmusubiName.SetActive(true);
+            cover.SetActive(false);
+
+            // タップ抑制を解除
+            isTappable = true;
+        }
     }
 
     // おむすび正解
     private async void correctOmsubi()
     {
-        dt.Phase = 5;
-        audioSource.PlayOneShot(sePinpon);
-        patatan[0].SetActive(true);
-        maru.SetActive(true);
-        await Task.Delay(500);
-        dt.nowSozai[0] = 0;
-        dt.nowSozai[1] = 0;
-        patatan[0].SetActive(false);
-        maru.SetActive(false);
-        GuestNum++;
-        if(GuestNum < 6)
+        // タップ可能だったら処理開始
+        if(isTappable)
         {
-            dt.Phase = 1;
-        }
-        else
-        {
-            dt.Phase = 6;
+            // タップを一時抑制
+            isTappable = false;
+
+            // 判定処理中
+            dt.Phase = 5;
+
+            // ポイント加算
+            dt.Score += Point;
+            txtScore.GetComponent<Text>().text = "Score:" + dt.Score.ToString("D4");
+
+            // ピンポン○
+            audioSource.PlayOneShot(sePinpon);
+            patatan[0].SetActive(true);
+            maru.SetActive(true);
+            await Task.Delay(500);
+
+            // 皿上の素材と○を消してパタタン増やす
+            dt.nowSozai[0] = 0;
+            dt.nowSozai[1] = 0;
+            maru.SetActive(false);
+            patatan[0].SetActive(false);
+
+            // 次のお客さんへ
+            GuestNum++;
+            if (GuestNum < 6)
+            {
+                dt.Phase = 1;
+            }
+            else
+            {
+                dt.Phase = 6;
+            }
+
+            // タップ抑制を解除
+            isTappable = true;
         }
     }
 
     // おむすび間違い
     private async void incorrectOmsubi()
     {
-        dt.Phase = 5;
-        audioSource.PlayOneShot(seBubuu);
-        peke.SetActive(true);
-        await Task.Delay(1500);
-        dt.nowSozai[0] = 0;
-        dt.nowSozai[1] = 0;
-        peke.SetActive(false);
-        dt.Phase = 3;
+        // タップ可能だったら処理開始
+        if (isTappable)
+        {
+            // タップを一時抑制
+            isTappable = false;
+
+            // 判定処理中
+            dt.Phase = 5;
+
+            // 残り時間を５秒減らす
+            remainTime -= 5.0f;
+            if(remainTime < 0)
+            {
+                remainTime = 0;
+            }
+
+            // ブッブー×
+            audioSource.PlayOneShot(seBubuu);
+            peke.SetActive(true);
+            await Task.Delay(1500);
+
+            // 皿上の素材と○を消す
+            dt.nowSozai[0] = 0;
+            dt.nowSozai[1] = 0;
+            peke.SetActive(false);
+
+            // タップ抑制を解除
+            isTappable = true;
+
+            // 素材選択フェーズへ
+            dt.Phase = 3;
+        }
+    }
+
+    // 残り時間によってボーナスポイントを加算
+    private async void addBonus()
+    {
+        // 効果音の時間だけちょっと待つ
+        await Task.Delay(2000);
+
+        int Bonus = (int)remainTime;
+        while (Bonus > 0)
+        {
+            int div;
+            if (Bonus > 10)
+            {
+                div = 5;
+            }
+            else
+            {
+                div = 1;
+            }
+            dt.Score += div;
+            Bonus -= div;
+            txtScore.GetComponent<Text>().text = "Score:" + dt.Score.ToString("D4");
+            txtTime.GetComponent<Text>().text = Bonus.ToString();
+            audioSource.PlayOneShot(sePi);
+            await Task.Delay(70);
+        }
+
     }
 
     // ゲームオーバーエフェクト
@@ -292,6 +391,10 @@ public class Game01Director : MonoBehaviour
     {
         // 二度と帰ってこないようにゲームフェーズを99にする
         dt.Phase = 99;
+
+        // カウントダウン停止・タップ抑制
+        isCountDown = false;
+        isTappable = false;
 
         // BGM止めてタイムアウト効果音
         audioSource.Stop();

@@ -10,6 +10,10 @@ public class dt : MonoBehaviour
     // ゲームの状態遷移
     static public int Phase = 0;
 
+    // スコア関連
+    static public int Score = 0;
+    static public int HighScore = 0;
+
     // おむすび名配列
     public static readonly string[] Omsubi =
     {
