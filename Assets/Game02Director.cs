@@ -9,8 +9,12 @@ using TMPro;        // TextMeshPro用に必要
 
 public class Game02Director : MonoBehaviour
 {
+    // 定数もろもろ
+    const int Stage = 1;            // ステージ
+    const int Point = 20;           // おむすびポイント
+    const int ShowTime = 1800;      // 注文表示時間
+
     // 変数もろもろ
-    private int Stage = 1;                          // ステージ
     private int GuestNum = 0;                       // お客様番号
     private int OrderMax = 2;                       // 注文おむすび個数
     private int[] OrderNum = new int[2];            // 注文おむすび番号
@@ -18,9 +22,6 @@ public class Game02Director : MonoBehaviour
     private int OrderHitNum = 0;                    // 正解数
     private float remainTime = 60.999f;             // 残り時間
     private bool isCountDown = false;               // カウントダウン中
-
-    // おむすびポイント
-    const int Point = 10;
 
     // 画像関連
     public Sprite[] Cd = new Sprite[3];
@@ -189,6 +190,7 @@ public class Game02Director : MonoBehaviour
                     {
                         HitFlg = true;
                         OrderHit[i] = true;
+                        break;
                     }
                 }
 
@@ -272,7 +274,6 @@ public class Game02Director : MonoBehaviour
         await Task.Delay(1000);
         guest.GetComponent<SpriteRenderer>().sprite = Cd[0];
         audioSource.PlayOneShot(vStart);
-        // await Task.Delay(1000);
 
         // BGM開始
         audioSource.Play();
@@ -308,7 +309,7 @@ public class Game02Director : MonoBehaviour
                 }
             }
             OrderText.text += dt.guestTalk[Stage, GuestNum, 1];
-            await Task.Delay(1500);
+            await Task.Delay(ShowTime);
             fukidashi.SetActive(false);
             reorder.SetActive(true);
 
