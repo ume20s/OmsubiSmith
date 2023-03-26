@@ -15,7 +15,6 @@ public class Game01Director : MonoBehaviour
     private int OrderNum;                   // 注文おむすび番号
     private float remainTime = 60.999f;     // 残り時間
     private bool isCountDown = false;       // カウントダウン中
-    private bool isTappable = false;        // タップ可能
 
     // おむすびポイント
     const int Point = 10;
@@ -24,10 +23,13 @@ public class Game01Director : MonoBehaviour
     public Sprite[] Cd = new Sprite[3];
     public Sprite[] Guest = new Sprite[6];
     public Sprite[] Sozai = new Sprite[21];
+    public Sprite Patatan;
+    public Sprite PataHino;
 
     // 音声関連
     AudioSource audioSource;
     public AudioClip[] vCd = new AudioClip[3];
+    public AudioClip vStart;
     public AudioClip sePinpon;
     public AudioClip seBubuu;
     public AudioClip seStageClear;
@@ -107,6 +109,9 @@ public class Game01Director : MonoBehaviour
         dt.Score = 0;
         txtScore.GetComponent<Text>().text = "Score:" + dt.Score.ToString("D4");
 
+        // タップ不可
+        dt.isTappable = false;
+
         // ハイスコア表示
         txtHighScore.GetComponent<Text>().text = "HighScore:" + dt.HighScore.ToString("D4");
 
@@ -148,7 +153,7 @@ public class Game01Director : MonoBehaviour
 
                 // ゲーム開始！
                 isCountDown = true;
-                isTappable = true;
+                dt.isTappable = true;
                 break;
 
             // 注文を表示
@@ -182,8 +187,9 @@ public class Game01Director : MonoBehaviour
 
             // ステージクリア
             case 6:
-                // カウントダウンを止める
+                // カウントダウンを止めてタップ抑制
                 isCountDown = false;
+                dt.isTappable = false;
 
                 // BGM止めてステージクリア効果音
                 audioSource.Stop();
@@ -211,11 +217,15 @@ public class Game01Director : MonoBehaviour
 
             // 次ステージ待ち
             case 7:
-                // タップしたら
-                if (Input.GetMouseButtonDown(0))
+                // タップ可能であれば
+                if (dt.isTappable)
                 {
-                    // 次のステージへ
-                    SceneManager.LoadScene("GameClearScene");
+                    // タップしたら
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        // 次のステージへ
+                        SceneManager.LoadScene("GameClearScene");
+                    }
                 }
                 break;
 
@@ -238,6 +248,9 @@ public class Game01Director : MonoBehaviour
         guest.GetComponent<SpriteRenderer>().sprite = Cd[0];
         audioSource.PlayOneShot(vCd[0]);
         await Task.Delay(1000);
+        guest.GetComponent<SpriteRenderer>().sprite = Cd[0];
+        audioSource.PlayOneShot(vStart);
+        // await Task.Delay(1000);
 
         // BGM開始
         audioSource.Play();
@@ -250,10 +263,10 @@ public class Game01Director : MonoBehaviour
     private async void DispOrder()
     {
         // タップ可能だったら処理開始
-        if(isTappable)
+        if(dt.isTappable)
         {
             // タップを一時抑制
-            isTappable = false;
+            dt.isTappable = false;
 
             // ボタンとおむすび名と素材パネルを隠す
             btnMake.SetActive(false);
@@ -276,7 +289,7 @@ public class Game01Director : MonoBehaviour
             cover.SetActive(false);
 
             // タップ抑制を解除
-            isTappable = true;
+            dt.isTappable = true;
         }
     }
 
@@ -284,10 +297,10 @@ public class Game01Director : MonoBehaviour
     private async void correctOmsubi()
     {
         // タップ可能だったら処理開始
-        if(isTappable)
+        if(dt.isTappable)
         {
             // タップを一時抑制
-            isTappable = false;
+            dt.isTappable = false;
 
             // 判定処理中
             dt.Phase = 5;
@@ -299,8 +312,20 @@ public class Game01Director : MonoBehaviour
 
             // ピンポン○
             audioSource.PlayOneShot(sePinpon);
-            patatan[0].SetActive(true);
             maru.SetActive(true);
+
+            // もし梅おむすびだったら日の丸おむすび
+            if(OrderNum == 4)
+            {
+                patatan[0].GetComponent<SpriteRenderer>().sprite = PataHino;
+            }
+            else
+            {
+                patatan[0].GetComponent<SpriteRenderer>().sprite = Patatan;
+            }
+            patatan[0].SetActive(true);
+
+            // 0.5秒くらい待ちます
             await Task.Delay(500);
 
             // 皿上の素材と○を消してパタタン増やす
@@ -321,7 +346,7 @@ public class Game01Director : MonoBehaviour
             }
 
             // タップ抑制を解除
-            isTappable = true;
+            dt.isTappable = true;
         }
     }
 
@@ -329,10 +354,10 @@ public class Game01Director : MonoBehaviour
     private async void incorrectOmsubi()
     {
         // タップ可能だったら処理開始
-        if (isTappable)
+        if (dt.isTappable)
         {
             // タップを一時抑制
-            isTappable = false;
+            dt.isTappable = false;
 
             // 判定処理中
             dt.Phase = 5;
@@ -355,7 +380,7 @@ public class Game01Director : MonoBehaviour
             peke.SetActive(false);
 
             // タップ抑制を解除
-            isTappable = true;
+            dt.isTappable = true;
 
             // 素材選択フェーズへ
             dt.Phase = 3;
@@ -388,6 +413,9 @@ public class Game01Director : MonoBehaviour
             audioSource.PlayOneShot(sePi);
             await Task.Delay(70);
         }
+
+        // タップ抑制解除
+        dt.isTappable = true;
     }
 
     // ハイスコアチェック
@@ -414,7 +442,7 @@ public class Game01Director : MonoBehaviour
 
         // カウントダウン停止・タップ抑制
         isCountDown = false;
-        isTappable = false;
+        dt.isTappable = false;
 
         // BGM止めてタイムアウト効果音
         audioSource.Stop();

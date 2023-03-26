@@ -7,6 +7,9 @@ public class btnCtrl : MonoBehaviour
     // Update is called once per frame
     public void Judgement()
     {
-        dt.Phase = 4;
+        if (dt.isTappable)
+        {
+            dt.Phase = 4;
+        }
     }
 }

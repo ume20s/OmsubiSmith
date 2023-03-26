@@ -10,6 +10,9 @@ public class dt : MonoBehaviour
     // ゲームの状態遷移
     static public int Phase = 0;
 
+    // タップ可能
+    static public bool isTappable = false;
+
     // スコア関連
     static public int Score = 0;
     static public int HighScore = 0;
