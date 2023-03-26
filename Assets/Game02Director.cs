@@ -188,6 +188,7 @@ public class Game02Director : MonoBehaviour
                     if ((dt.makeOmsubi[dt.nowSozai[0], dt.nowSozai[1]] == OrderNum[i]) && !OrderHit[i])
                     {
                         HitFlg = true;
+                        OrderHit[i] = true;
                     }
                 }
 
@@ -301,7 +302,7 @@ public class Game02Director : MonoBehaviour
             for (int i=0; i<OrderMax; i++)
             {
                 OrderText.text += "<color=#ee0000>" + dt.Omsubi[OrderNum[i]] + "</color>";
-                if(i < OrderMax)
+                if(i < OrderMax-1)
                 {
                     OrderText.text += "と、";
                 }
@@ -392,33 +393,6 @@ public class Game02Director : MonoBehaviour
             dt.isTappable = true;
         }
     }
-
-    // おむすび重複
-    private void dupOmsubi()
-    {
-        // タップ可能だったら処理開始
-        if (dt.isTappable)
-        {
-            // タップを一時抑制
-            dt.isTappable = false;
-
-            // 判定処理中
-            dt.Phase = 5;
-
-            // 皿上の素材と○を消す
-            dt.nowSozai[0] = 0;
-            dt.nowSozai[1] = 0;
-            audioSource.PlayOneShot(seResetSozai);
-
-            // タップ抑制を解除
-            dt.isTappable = true;
-
-            // 素材選択フェーズへ
-            dt.Phase = 3;
-        }
-
-    }
-
 
     // おむすび間違い
     private async void incorrectOmsubi()
