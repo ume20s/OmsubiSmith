@@ -224,7 +224,7 @@ public class Game01Director : MonoBehaviour
                     if (Input.GetMouseButtonDown(0))
                     {
                         // 次のステージへ
-                        SceneManager.LoadScene("GameClearScene");
+                        SceneManager.LoadScene("Game02Scene");
                     }
                 }
                 break;
@@ -277,7 +277,7 @@ public class Game01Director : MonoBehaviour
             fukidashi.SetActive(true);
             reorder.SetActive(false);
             OrderText.text = dt.guestTalk[Stage, GuestNum, 0] +
-                "<u><color=#cc0000>" + dt.Omsubi[OrderNum] + "</color></u>" +
+                "<color=#ee0000>" + dt.Omsubi[OrderNum] + "</color>" +
                 dt.guestTalk[Stage, GuestNum, 1];
             await Task.Delay(1500);
             fukidashi.SetActive(false);

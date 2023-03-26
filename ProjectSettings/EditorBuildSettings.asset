@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Game01Scene.unity
     guid: a025293e6ba2ab14ca2652a78d81cc77
   - enabled: 1
+    path: Assets/Game02Scene.unity
+    guid: 83e0cab41225fa948b49b8f09eb3e18d
+  - enabled: 1
     path: Assets/GameClearScene.unity
     guid: 8e594fb0d18e89947a38593ff9f04d41
   - enabled: 1
