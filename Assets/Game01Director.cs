@@ -39,6 +39,7 @@ public class Game01Director : MonoBehaviour
 
     // ゲームオブジェクト
     GameObject guest;
+    GameObject background;
     GameObject txtStage;
     GameObject txtScore;
     GameObject txtHighScore;
@@ -63,6 +64,7 @@ public class Game01Director : MonoBehaviour
     {
         // オブジェクトの取得
         guest = GameObject.Find("guest");
+        background = GameObject.Find("background");
         txtStage = GameObject.Find("txtStage");
         txtScore = GameObject.Find("txtScore");
         txtHighScore = GameObject.Find("txtHighscore");
@@ -91,6 +93,7 @@ public class Game01Director : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
 
         // あらかじめ余計な表示を消しておく
+        background.SetActive(false);
         txtStage.SetActive(false);
         txtTime.SetActive(false);
         txtOrder.SetActive(false);
@@ -143,6 +146,7 @@ public class Game01Director : MonoBehaviour
             // ゲーム開始のもろもろの設定
             case 1:
                 // ゲーム素材の再表示
+                background.SetActive(true);
                 txtStage.SetActive(true);
                 txtTime.SetActive(true);
                 txtOrder.SetActive(true);
@@ -277,8 +281,8 @@ public class Game01Director : MonoBehaviour
             // 一定時間だけ注文セリフの表示
             fukidashi.SetActive(true);
             reorder.SetActive(false);
-            OrderText.text = dt.guestTalk[Stage, GuestNum, 0] +
-                "<color=#ee0000>" + dt.Omsubi[OrderNum] + "</color>" +
+            OrderText.text = dt.guestTalk[Stage, GuestNum, 0] + "<br>" +
+                "<mark=#ffff0044><color=#660000>" + dt.Omsubi[OrderNum] + "</color></mark><br>" +
                 dt.guestTalk[Stage, GuestNum, 1];
             await Task.Delay(ShowTime);
             fukidashi.SetActive(false);

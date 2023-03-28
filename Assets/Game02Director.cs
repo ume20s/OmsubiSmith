@@ -20,7 +20,7 @@ public class Game02Director : MonoBehaviour
     private int[] OrderNum = new int[2];            // 注文おむすび番号
     private bool[] OrderHit = new bool[2];          // 正解おむすび番号
     private int OrderHitNum = 0;                    // 正解数
-    private float remainTime = 60.999f;             // 残り時間
+    private float remainTime = 70.999f;             // 残り時間
     private bool isCountDown = false;               // カウントダウン中
 
     // 画像関連
@@ -43,6 +43,7 @@ public class Game02Director : MonoBehaviour
 
     // ゲームオブジェクト
     GameObject guest;
+    GameObject background;
     GameObject txtStage;
     GameObject txtScore;
     GameObject txtHighScore;
@@ -67,6 +68,7 @@ public class Game02Director : MonoBehaviour
     {
         // オブジェクトの取得
         guest = GameObject.Find("guest");
+        background = GameObject.Find("background");
         txtStage = GameObject.Find("txtStage");
         txtScore = GameObject.Find("txtScore");
         txtHighScore = GameObject.Find("txtHighscore");
@@ -95,6 +97,7 @@ public class Game02Director : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
 
         // あらかじめ余計な表示を消しておく
+        background.SetActive(false);
         txtStage.SetActive(false);
         txtTime.SetActive(false);
         txtOrder.SetActive(false);
@@ -146,6 +149,7 @@ public class Game02Director : MonoBehaviour
             // ゲーム開始のもろもろの設定
             case 1:
                 // ゲーム素材の再表示
+                background.SetActive(true);
                 txtStage.SetActive(true);
                 txtTime.SetActive(true);
                 txtOrder.SetActive(true);
@@ -299,13 +303,24 @@ public class Game02Director : MonoBehaviour
             // 一定時間だけ注文セリフの表示
             fukidashi.SetActive(true);
             reorder.SetActive(false);
-            OrderText.text = dt.guestTalk[Stage, GuestNum, 0];
+            OrderText.text = dt.guestTalk[Stage, GuestNum, 0] + "<br>";
             for (int i=0; i<OrderMax; i++)
             {
-                OrderText.text += "<color=#ee0000>" + dt.Omsubi[OrderNum[i]] + "</color>";
-                if(i < OrderMax-1)
+                if (OrderHit[i])
                 {
-                    OrderText.text += "と、";
+                    OrderText.text += dt.Omsubi[OrderNum[i]];
+                }
+                else
+                {
+                    OrderText.text += "<mark=#ffff0044><color=#660000>" + dt.Omsubi[OrderNum[i]] + "</color></mark>";
+                }
+                if (i < OrderMax-1)
+                {
+                    OrderText.text += "と、<br>";
+                }
+                else
+                {
+                    OrderText.text += "<br>";
                 }
             }
             OrderText.text += dt.guestTalk[Stage, GuestNum, 1];
