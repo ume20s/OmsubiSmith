@@ -312,7 +312,7 @@ public class Game02Director : MonoBehaviour
                 }
                 else
                 {
-                    OrderText.text += "<mark=#ffff0044><color=#660000>" + dt.Omsubi[OrderNum[i]] + "</color></mark>";
+                    OrderText.text += "<color=#aa0000>" + dt.Omsubi[OrderNum[i]] + "</color>";
                 }
                 if (i < OrderMax-1)
                 {

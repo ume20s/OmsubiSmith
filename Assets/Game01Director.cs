@@ -282,7 +282,7 @@ public class Game01Director : MonoBehaviour
             fukidashi.SetActive(true);
             reorder.SetActive(false);
             OrderText.text = dt.guestTalk[Stage, GuestNum, 0] + "<br>" +
-                "<mark=#ffff0044><color=#660000>" + dt.Omsubi[OrderNum] + "</color></mark><br>" +
+                "<color=#aa0000>" + dt.Omsubi[OrderNum] + "</color><br>" +
                 dt.guestTalk[Stage, GuestNum, 1];
             await Task.Delay(ShowTime);
             fukidashi.SetActive(false);
