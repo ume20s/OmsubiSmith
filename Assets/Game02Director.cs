@@ -10,17 +10,18 @@ using TMPro;        // TextMeshPro用に必要
 public class Game02Director : MonoBehaviour
 {
     // 定数もろもろ
-    const int Stage = 1;            // ステージ
-    const int Point = 20;           // おむすびポイント
-    const int ShowTime = 1800;      // 注文表示時間
+    const int Stage = 1;            // ●ステージ－１
+    const int Point = 20;           // ●おむすびポイント
+    const int ShowTime = 1800;      // ●注文表示時間
 
     // 変数もろもろ
+    // private float remainTime = 120.999f;             // ●残り時間
+    private float remainTime = 70.999f;             // ●残り時間
     private int GuestNum = 0;                       // お客様番号
-    private int OrderMax = 2;                       // 注文おむすび個数
-    private int[] OrderNum = new int[2];            // 注文おむすび番号
-    private bool[] OrderHit = new bool[2];          // 正解おむすび番号
+    private int OrderMax = Stage+1;                 // 注文おむすび個数
+    private int[] OrderNum = new int[Stage+1];      // 注文おむすび番号
+    private bool[] OrderHit = new bool[Stage+1];    // 正解おむすび番号
     private int OrderHitNum = 0;                    // 正解数
-    private float remainTime = 70.999f;             // 残り時間
     private bool isCountDown = false;               // カウントダウン中
 
     // 画像関連
@@ -252,7 +253,7 @@ public class Game02Director : MonoBehaviour
                     if (Input.GetMouseButtonDown(0))
                     {
                         // 次のステージへ
-                        SceneManager.LoadScene("GameClearScene");
+                        SceneManager.LoadScene("Game03Scene");
                     }
                 }
                 break;
@@ -308,11 +309,11 @@ public class Game02Director : MonoBehaviour
             {
                 if (OrderHit[i])
                 {
-                    OrderText.text += dt.Omsubi[OrderNum[i]];
+                    OrderText.text += "<color=#aaaaaa>" + dt.Omsubi[OrderNum[i]] + "</color>";
                 }
                 else
                 {
-                    OrderText.text += "<color=#aa0000>" + dt.Omsubi[OrderNum[i]] + "</color>";
+                    OrderText.text += "<color=#cc0000>" + dt.Omsubi[OrderNum[i]] + "</color>";
                 }
                 if (i < OrderMax-1)
                 {
@@ -459,7 +460,7 @@ public class Game02Director : MonoBehaviour
             int div;
             if (Bonus > 10)
             {
-                div = 5;
+                div = 4;
             }
             else
             {

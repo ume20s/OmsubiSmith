@@ -20,7 +20,6 @@ public class OpeningDirector : MonoBehaviour
 
         // ハイスコア読み込み
         dt.HighScore = PlayerPrefs.GetInt(dt.SAVE_KEY, 0);
-        // dt.HighScore = 0;
 
         // 音声のコンポーネントを取得
         audioSource = GetComponent<AudioSource>();

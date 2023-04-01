@@ -10,14 +10,14 @@ using TMPro;        // TextMeshPro用に必要
 public class Game01Director : MonoBehaviour
 {
     // 定数もろもろ
-    const int Stage = 0;            // ステージ
+    const int Stage = 0;            // ステージ－１
     const int Point = 10;           // おむすびポイント
     const int ShowTime = 1000;      // 注文表示時間
 
     // 変数もろもろ
+    private float remainTime = 60.999f;     // 残り時間
     private int GuestNum = 0;               // お客様番号
     private int OrderNum;                   // 注文おむすび番号
-    private float remainTime = 60.999f;     // 残り時間
     private bool isCountDown = false;       // カウントダウン中
 
     // 画像関連
@@ -282,7 +282,7 @@ public class Game01Director : MonoBehaviour
             fukidashi.SetActive(true);
             reorder.SetActive(false);
             OrderText.text = dt.guestTalk[Stage, GuestNum, 0] + "<br>" +
-                "<color=#aa0000>" + dt.Omsubi[OrderNum] + "</color><br>" +
+                "<color=#cc0000>" + dt.Omsubi[OrderNum] + "</color><br>" +
                 dt.guestTalk[Stage, GuestNum, 1];
             await Task.Delay(ShowTime);
             fukidashi.SetActive(false);
@@ -404,7 +404,7 @@ public class Game01Director : MonoBehaviour
             int div;
             if (Bonus > 10)
             {
-                div = 5;
+                div = 4;
             }
             else
             {
@@ -427,7 +427,7 @@ public class Game01Director : MonoBehaviour
     private void checkHighScore()
     {
         // 現スコアがハイスコアを上回ったら
-        if(dt.Score > dt.HighScore)
+        if (dt.Score > dt.HighScore)
         {
             // ハイスコア更新
             dt.HighScore = dt.Score;

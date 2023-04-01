@@ -168,7 +168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5527917fbc05ddb4490f6af7729788aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vGameOver: {fileID: 8300000, guid: 863a79c50d3b4444689386df26c23ed6, type: 3}
+  vGameOver: {fileID: 8300000, guid: b12afa7ea62f28348982f848f52d9060, type: 3}
 --- !u!82 &916088272
 AudioSource:
   m_ObjectHideFlags: 0
