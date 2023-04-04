@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class openingDirector : MonoBehaviour
+public class btnReturnToOpeningDirector : MonoBehaviour
 {
     // タップしたら
     public void onClick()
     {
-        SceneManager.LoadScene("Game01Scene");
+        // オープニング画面に戻る
+        SceneManager.LoadScene("Game00Scene");
     }
 }

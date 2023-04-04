@@ -15,7 +15,6 @@ public class Game05Director : MonoBehaviour
     const int ShowTime = 3000;      // ●注文表示時間
 
     // 変数もろもろ
-    // private float remainTime = 200.999f;             // ●残り時間
     private float remainTime = 100.999f;            // ●残り時間
     private int GuestNum = 0;                       // お客様番号
     private int OrderMax = Stage+1;                 // 注文おむすび個数
@@ -317,7 +316,7 @@ public class Game05Director : MonoBehaviour
                 }
                 if (i < OrderMax-1)
                 {
-                    OrderText.text += "と、<br>";
+                    OrderText.text += "と<br>";
                 }
                 else
                 {

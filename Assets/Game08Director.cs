@@ -317,7 +317,7 @@ public class Game08Director : MonoBehaviour
                 }
                 if (i < OrderMax-1)
                 {
-                    OrderText.text += "‚ÆA<br>";
+                    OrderText.text += "‚Æ<br>";
                 }
                 else
                 {
