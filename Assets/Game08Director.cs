@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using System.Threading;
-using System.Threading.Tasks;
 using TMPro;        // TextMeshPro用に必要
 
 public class Game08Director : MonoBehaviour
@@ -12,10 +10,9 @@ public class Game08Director : MonoBehaviour
     // 定数もろもろ
     const int Stage = 7;            // ●ステージ－１
     const int Point = 80;           // ●おむすびポイント
-    const int ShowTime = 3000;      // ●注文表示時間
+    const float ShowTime = 3.0f;    // ●注文表示時間
 
     // 変数もろもろ
-    // private float remainTime = 300.999f;             // ●残り時間
     private float remainTime = 130.999f;            // ●残り時間
     private int GuestNum = 0;                       // お客様番号
     private int OrderMax = Stage+1;                 // 注文おむすび個数
@@ -127,7 +124,7 @@ public class Game08Director : MonoBehaviour
         dt.Phase = 0;
 
         // カウントダウンとゲーム準備
-        CountDown();
+        StartCoroutine("CountDown");
     }
 
     // Update is called once per frame
@@ -174,7 +171,7 @@ public class Game08Director : MonoBehaviour
 
             // 注文を表示
             case 2:
-                DispOrder();
+                StartCoroutine("DispOrder");
                 dt.Phase++;
                 break;
 
@@ -202,11 +199,11 @@ public class Game08Director : MonoBehaviour
                 // 合ってるのあった！
                 if (HitFlg)
                 {
-                    correctOmsubi();
+                    StartCoroutine("correctOmsubi");
                 }
                 else    // なかった！
                 {
-                    incorrectOmsubi();
+                    StartCoroutine("incorrectOmsubi");
                 }
                 break;
 
@@ -239,7 +236,7 @@ public class Game08Director : MonoBehaviour
                 stageclear.SetActive(true);
 
                 // 残り時間ボーナスを加算
-                addBonus();
+                StartCoroutine("addBonus");
 
                 dt.Phase = 7;
                 break;
@@ -260,23 +257,23 @@ public class Game08Director : MonoBehaviour
 
             // ゲームオーバー
             case 8:
-                gameOverEfect();
+                StartCoroutine("gameOverEffect");
                 break;
         }
     }
 
     // カウントダウン！
-    private async void CountDown()
+    IEnumerator CountDown()
     {
         guest.GetComponent<SpriteRenderer>().sprite = Cd[2];
         audioSource.PlayOneShot(vCd[2]);
-        await Task.Delay(1000);
+        yield return new WaitForSeconds(1.0f);
         guest.GetComponent<SpriteRenderer>().sprite = Cd[1];
         audioSource.PlayOneShot(vCd[1]);
-        await Task.Delay(1000);
+        yield return new WaitForSeconds(1.0f);
         guest.GetComponent<SpriteRenderer>().sprite = Cd[0];
         audioSource.PlayOneShot(vCd[0]);
-        await Task.Delay(1000);
+        yield return new WaitForSeconds(1.0f);
         guest.GetComponent<SpriteRenderer>().sprite = Cd[0];
         audioSource.PlayOneShot(vStart);
 
@@ -288,7 +285,7 @@ public class Game08Director : MonoBehaviour
     }
 
     // 注文の表示
-    private async void DispOrder()
+    IEnumerator DispOrder()
     {
         // タップ可能だったら処理開始
         if(dt.isTappable)
@@ -325,7 +322,7 @@ public class Game08Director : MonoBehaviour
                 }
             }
             OrderText.text += dt.guestTalk[Stage, GuestNum, 1];
-            await Task.Delay(ShowTime);
+            yield return new WaitForSeconds(ShowTime);
             fukidashi.SetActive(false);
             reorder.SetActive(true);
 
@@ -340,7 +337,7 @@ public class Game08Director : MonoBehaviour
     }
 
     // おむすび正解
-    private async void correctOmsubi()
+    IEnumerator correctOmsubi()
     {
         // タップ可能だったら処理開始
         if(dt.isTappable)
@@ -375,7 +372,7 @@ public class Game08Director : MonoBehaviour
             OrderHitNum++;
 
             // 0.5秒くらい待ちます
-            await Task.Delay(500);
+            yield return new WaitForSeconds(0.5f);
 
             // 皿上の素材と○を消す
             dt.nowSozai[0] = 0;
@@ -412,7 +409,7 @@ public class Game08Director : MonoBehaviour
     }
 
     // おむすび間違い
-    private async void incorrectOmsubi()
+    IEnumerator incorrectOmsubi()
     {
         // タップ可能だったら処理開始
         if (dt.isTappable)
@@ -433,7 +430,7 @@ public class Game08Director : MonoBehaviour
             // ブッブー×
             audioSource.PlayOneShot(seBubuu);
             peke.SetActive(true);
-            await Task.Delay(1000);
+            yield return new WaitForSeconds(1.0f);
 
             // 皿上の素材と○を消す
             dt.nowSozai[0] = 0;
@@ -449,10 +446,10 @@ public class Game08Director : MonoBehaviour
     }
 
     // 残り時間によってボーナスポイントを加算
-    private async void addBonus()
+    IEnumerator addBonus()
     {
         // 効果音の時間だけちょっと待つ
-        await Task.Delay(2000);
+        yield return new WaitForSeconds(2.0f);
 
         int Bonus = (int)remainTime;
         while (Bonus > 0)
@@ -472,7 +469,7 @@ public class Game08Director : MonoBehaviour
             txtScore.GetComponent<Text>().text = "Score:" + dt.Score.ToString("D4");
             txtTime.GetComponent<Text>().text = Bonus.ToString();
             audioSource.PlayOneShot(sePi);
-            await Task.Delay(70);
+            yield return new WaitForSeconds(0.07f);
         }
 
         // タップ抑制解除
@@ -496,7 +493,7 @@ public class Game08Director : MonoBehaviour
     }
 
     // ゲームオーバーエフェクト
-    private async void gameOverEfect()
+    IEnumerator gameOverEffect()
     {
         // 二度と帰ってこないようにゲームフェーズを99にする
         dt.Phase = 99;
@@ -508,7 +505,7 @@ public class Game08Director : MonoBehaviour
         // BGM止めてタイムアウト効果音
         audioSource.Stop();
         audioSource.PlayOneShot(seTimeout);
-        await Task.Delay(2700);
+        yield return new WaitForSeconds(2.7f);
 
         // ゲームオーバー画面へ
         SceneManager.LoadScene("GameOverScene");
